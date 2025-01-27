@@ -7,10 +7,8 @@ import scipy
 import sounddevice as sd
 from transformers import pipeline, AutoProcessor, BarkModel
 
-# Initialize the LLaMA pipeline
-model_id = "meta-llama/Llama-3.1-8B-Instruct"
-# model_id = "meta-llama/Llama-3.2-3B-Instruct"
-# model_id = "meta-llama/Llama-3.2-1B-Instruct"
+# Initialize the Qwen pipeline
+model_id = "Qwen/Qwen2.5-7B-Instruct"
 
 pipe = pipeline(
     "text-generation",
@@ -23,7 +21,7 @@ pipe = pipeline(
             "bnb_4bit_quant_type": "nf4"       # Use Normal Float 4 data type
             },
     },
-    pad_token_id=128001,
+    # pad_token_id=128001,
     device_map=0,
 )
 
