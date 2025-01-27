@@ -2,7 +2,9 @@
 A repo of implementations/experiments for AI models hosted locally
 
 # huggingface repos
-https://huggingface.co/allenai/Molmo-7B-D-0924
+https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct
+https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct
 
 # python libraries
-pip install einops torchvision
+pip install qwen-vl-utils
+
