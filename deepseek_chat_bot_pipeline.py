@@ -7,8 +7,10 @@ import scipy
 import sounddevice as sd
 from transformers import pipeline, AutoProcessor, BarkModel
 
-# Initialize the Qwen pipeline
-model_id = "Qwen/Qwen2.5-7B-Instruct"
+# Initialize the DeepSeek pipeline
+model_id = "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+# model_id = "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+# model_id = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
 
 pipe = pipeline(
     "text-generation",
@@ -39,7 +41,7 @@ os.makedirs(chat_history_dir, exist_ok=True)
 # Initialize the chat history
 chat_history = [
     {
-        "role": "system",
+        "role": "user",
         "content": "You are a knowledgeable, efficient, and direct AI assistant. Provide concise answers, focusing on the key information needed. Offer suggestions tactfully when appropriate to improve outcomes. Engage in productive collaboration with the user."
     }
 ]
