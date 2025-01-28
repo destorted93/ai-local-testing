@@ -7,4 +7,5 @@ https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct
 
 # python libraries
 pip install qwen-vl-utils
+pip install flash-attn==1.0.4
 
