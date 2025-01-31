@@ -1,0 +1,122 @@
+[
+    {
+        "question": "who am I?",
+        "answer": "command-line software engineer assistant",
+        "score": 0.20875315368175507
+    },
+    {
+        "question": "what is my task?",
+        "answer": "A C program that prints 'Hello <user_name>'",
+        "score": 0.06073646619915962
+    },
+    {
+        "question": "how should commands be separated?",
+        "answer": "by new line",
+        "score": 0.7020662426948547
+    },
+    {
+        "question": "what commands I must not use?",
+        "answer": "bash, PowerShell, or Unix-like commands",
+        "score": 0.5522968173027039
+    },
+    {
+        "question": "what is a component?",
+        "answer": "header files, source files",
+        "score": 0.5231421589851379
+    },
+    {
+        "question": "what commands are prohibited?",
+        "answer": "Commands such as \"cd\", \"pushd\", \"popd\"",
+        "score": 0.0359969325363636
+    },
+    {
+        "question": "what commands can I use?",
+        "answer": "Command Prompt commands",
+        "score": 0.22009235620498657
+    },
+    {
+        "question": "what should I avoid?",
+        "answer": "bash, PowerShell, or Unix-like commands",
+        "score": 0.053633615374565125
+    },
+    {
+        "question": "where will the commands be executed?",
+        "answer": "from the initial location",
+        "score": 0.4262252151966095
+    },
+    {
+        "question": "how should the generated code be?",
+        "answer": "readable",
+        "score": 0.5038809180259705
+    },
+    {
+        "question": "what headers should declare?",
+        "answer": "function prototypes and constants",
+        "score": 0.8684393167495728
+    },
+    {
+        "question": "what should I not do with the feedback?",
+        "answer": "do not explain them",
+        "score": 0.0762861892580986
+    },
+    {
+        "question": "what is the template for writing files?",
+        "answer": "gcc",
+        "score": 0.02881697379052639
+    },
+    {
+        "question": "what are the markers when writing files?",
+        "answer": "indicate the content to be written to the specified file",
+        "score": 0.3151145875453949
+    },
+    {
+        "question": "how should I solve a task?",
+        "answer": "step by step",
+        "score": 0.41589489579200745
+    },
+    {
+        "question": "what should I not do?",
+        "answer": "explain, summarize, or provide feedback",
+        "score": 0.1735002100467682
+    },
+    {
+        "question": "what can I create?",
+        "answer": "folders",
+        "score": 0.4241136610507965
+    },
+    {
+        "question": "what should I generate?",
+        "answer": "one command at a time",
+        "score": 0.34932827949523926
+    },
+    {
+        "question": "What should I do withe the information from executed commands?",
+        "answer": "waiting for the output before providing the next command",
+        "score": 0.10333296656608582
+    },
+    {
+        "question": "What should I do with the information from executed commands?",
+        "answer": "continue the task or fix the issue",
+        "score": 0.110744409263134
+    },
+    {
+        "question": "what commands are not allowed?",
+        "answer": "Commands such as \"cd\", \"pushd\", \"popd\"",
+        "score": 0.043555259704589844
+    },
+    {
+        "question": "what should I do with the returned output from generated commands?",
+        "answer": "continue the task or fix the issue",
+        "score": 0.19587570428848267
+    },
+    {
+        "question": "what should I do with the returned output?",
+        "answer": "continue the task or fix the issue",
+        "score": 0.15347640216350555
+    },
+    {
+        "question": "what are modular principles?",
+        "answer": "maintains separation of concerns, and follows proper build rules",
+        "score": 0.012808773666620255
+    }
+]
