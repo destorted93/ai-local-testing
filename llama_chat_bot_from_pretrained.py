@@ -12,28 +12,34 @@ from threading import Thread
 # model_id = "meta-llama/Llama-3.2-3B-Instruct"
 model_id = "meta-llama/Llama-3.2-1B-Instruct"
 
+device = torch.device("cpu")
+
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,  # Enable nested quantization
     bnb_4bit_quant_type="nf4",       # Use Normal Float 4 data type
-    bnb_4bit_compute_dtype=torch.float16,
-    # llm_int8_enable_fp32_cpu_offload=True
+    bnb_4bit_compute_dtype=torch.float,
+    llm_int8_enable_fp32_cpu_offload=True
 )
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    torch_dtype="auto",
+    # torch_dtype=torch.bfloat16,
+    # torch_dtype="auto",
     # torch_dtype=torch.int8,
     # quantization_config=bnb_config,
     # device_map="auto",
-    device_map=0,
+    # device_map=0,
+    device_map="cpu"
 )
+
+model.to(device)  # Explicitly move model to CPU
 
 streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True )
 
 # Tokens limit for model's response
-MAX_NEW_TOKENS = 2000
+MAX_NEW_TOKENS = 512
 
 # Generate a timestamped filename for saving the chat history
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -69,10 +75,33 @@ chat_history = [
 ]
 
 # load system role content defined in external file and overwrite the default one
-# with open("system_role.txt", 'r', encoding="utf-8") as f:
-#     chat_history[0]["content"] = f.read()
+with open("system_role.txt", 'r', encoding="utf-8") as f:
+    chat_history[0]["content"] = f.read()
+
+
+# load a chat history
+while True:
+    chat_history_user_file = input("Your chat history file: ").strip()
+    if chat_history_user_file:
+        if os.path.exists(chat_history_user_file):
+            with open(chat_history_user_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                chat_history = data
+
+                for item in data:
+                    if "time" in item:
+                        item.pop("time")
+
+                chat_history = data
+                break
+    else:
+        break
+
+
 
 copied_chat_history = copy.deepcopy(chat_history)
+
+print(chat_history)
 
 
 
@@ -93,7 +122,7 @@ def chat_with_bot(user_input):
       add_generation_prompt=True,
       return_tensors="pt",
       return_dict=True,
-    ).to(model.device)
+    ).to(device)
 
     generation_kwargs = dict(**inputs, 
         do_sample=True,

@@ -1,0 +1,15 @@
+[
+    {
+        "role": "system",
+        "content": "You are a knowledgeable, efficient, and direct AI assistant. You provide concise answers, focusing on the key information needed. You offer suggestions tactfully when appropriate to improve outcomes. You engage in productive collaboration with the user."
+    },
+    {
+        "role": "user",
+        "content": "hi"
+    },
+    {
+        "role": "assistant",
+        "content": "How can I assist you today?",
+        "time": 5.247902154922485
+    }
+]
