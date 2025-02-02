@@ -18,8 +18,8 @@ bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,  # Enable nested quantization
     bnb_4bit_quant_type="nf4",       # Use Normal Float 4 data type
-    bnb_4bit_compute_dtype=torch.float,
-    llm_int8_enable_fp32_cpu_offload=True
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    # llm_int8_enable_fp32_cpu_offload=True
 )
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -31,10 +31,12 @@ model = AutoModelForCausalLM.from_pretrained(
     # quantization_config=bnb_config,
     # device_map="auto",
     # device_map=0,
-    device_map="cpu"
-)
+    # device_map="auto",
+    # low_cpu_mem_usage=True,
+    # use_cache=False
+).to(device)
 
-model.to(device)  # Explicitly move model to CPU
+# model.to(device)  # Explicitly move model to CPU
 
 streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True )
 
@@ -75,8 +77,8 @@ chat_history = [
 ]
 
 # load system role content defined in external file and overwrite the default one
-with open("system_role.txt", 'r', encoding="utf-8") as f:
-    chat_history[0]["content"] = f.read()
+# with open("system_role.txt", 'r', encoding="utf-8") as f:
+#     chat_history[0]["content"] = f.read()
 
 
 # load a chat history
@@ -101,7 +103,7 @@ while True:
 
 copied_chat_history = copy.deepcopy(chat_history)
 
-print(chat_history)
+# print(chat_history)
 
 
 
@@ -122,7 +124,7 @@ def chat_with_bot(user_input):
       add_generation_prompt=True,
       return_tensors="pt",
       return_dict=True,
-    ).to(device)
+    ).to(model.device)
 
     generation_kwargs = dict(**inputs, 
         do_sample=True,
