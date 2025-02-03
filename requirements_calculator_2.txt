@@ -1,0 +1,10 @@
+Requirement: 
+A calculator project with two components in C: arithmetic and calculator. Arithmetic component should include functions for add, subtract, multiply, and divide operations. Calculator component should use these functions to provide two modes: an interactive mode where the user picks an operation, inputs numbers, and sees results in a loop with an exit option; and a non-interactive mode where the program takes arguments (operation, x, and y) to compute and return the result. Protect against invalid inputs in both modes. 
+Task: 
+1. Create the calculator_project. The components should be created in calculator_project folder. 
+1. Define the software detailed design of the calculator project in a design.txt file, in calculator_project folder. 
+2. Create testcases in a test.txt file in calculator_project folder. The test should have a name, description, input, expected output. 
+3. Use the software detailed design and the testcases to generate the code for the two components, using test driven development approach. 
+4. Create the bin folder inside calculator poject. Compile the project with gcc and generate calculator.exe in the bin folder inside calculator project. 
+5. Test the calculator.exe by calling it in non-interactive mode, get the output and compare with expected results. Print the result of the tests. 
+Workspace: current directory. 

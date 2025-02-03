@@ -1,0 +1,43 @@
+Calculator App Requirements
+1. General Requirements
+1.1. The calculator app shall be implemented in C.
+1.2. The app shall consist of three components:
+Arithmetic Component - Implements basic arithmetic operations.
+Calculator Component - Implements user interaction and logic.
+Main Entry Point (main.c) - Integrates the two components and handles execution.
+1.3. The app shall support two modes of operation:
+Interactive Mode - The user selects an operation from a menu and inputs values.
+Non-Interactive Mode - The app is executed with command-line arguments specifying the operation and values.
+1.4. The app shall handle invalid input gracefully in both modes.
+1.5. The code shall be modular, ensuring separation of concerns between arithmetic operations and user interface.
+2. Arithmetic Component Requirements
+2.1. The component shall provide functions for the following operations:
+Addition (+)
+Subtraction (-)
+Multiplication (*)
+Division (/)
+2.2. Each function shall accept two floating-point numbers as input and return a floating-point result.
+2.3. Division shall check for division by zero and return an error code or a safe default response (e.g., NaN or an error message).
+2.4. The component shall not handle user input or display output. It should only provide arithmetic functionality.
+3. Calculator Component Requirements
+3.1. The component shall handle user interaction in interactive mode, displaying a menu and reading user input.
+3.2. The component shall interpret command-line arguments in non-interactive mode and pass them to the arithmetic component.
+3.3. The component shall validate user input:
+Ensure the operation is valid (+, -, *, /).
+Ensure the numbers provided are valid floating-point values.
+Ensure no division by zero occurs.
+3.4. The component shall display appropriate error messages for invalid input.
+3.5. The component shall print the result of the operation in a clear format.
+4. Main Program (main.c) Requirements
+4.1. The main function shall determine whether to run in interactive or non-interactive mode based on command-line arguments:
+If no arguments are provided, enter interactive mode.
+If three arguments are provided (operation, value1, value2), enter non-interactive mode.
+4.2. The main function shall call the appropriate functions from the calculator and arithmetic components.
+4.3. The main function shall exit gracefully, providing an appropriate exit code:
+0 for success.
+Non-zero values for errors (e.g., invalid arguments, division by zero).
+5. Input Validation and Error Handling
+5.1. Interactive mode shall prompt the user again if invalid input is provided.
+5.2. Non-interactive mode shall print an error message and exit with an error code if invalid arguments are given.
+5.3. Error messages shall be clear, indicating the exact issue (e.g., "Invalid operation", "Division by zero", "Invalid number format").
+5.4. Edge cases, such as extremely large/small numbers, shall be handled gracefully without causing crashes.
