@@ -1,0 +1,4 @@
+Please create a python script which create a complex random folders structure. 
+It should start with fake_bin folder. 
+Inside it start to create a random number of folders from 5 to 10 with random 10 characters long names. 
+In each new folder, this task will repeat again. And so on, in a recursive way, for the next 5 levels.

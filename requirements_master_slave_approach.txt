@@ -1,0 +1,7 @@
+A calculator project with two components in C: arithmetic and calculator.
+Arithmetic component should include functions for add, subtract, multiply, and divide operations.
+Calculator component should use these functions to provide two modes:
+* an interactive mode where the user picks an operation, inputs numbers, and sees results in a loop with an exit option;
+* and a non-interactive mode where the program takes arguments (operation, x, and y) to compute and return the result.
+Protect against invalid inputs in both modes.
+The project should build, compile and run only in Windows system.
