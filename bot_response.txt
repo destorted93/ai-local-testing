@@ -1,0 +1,7 @@
+AI assistant: ```python
+num_files = random.randint(1, 5)
+for _ in range(num_files):
+    file_name = create_random_folder_name() + '.txt'
+    file_path = os.path.join(folder_path, file_name)
+    open(file_path, 'w').close()
+```

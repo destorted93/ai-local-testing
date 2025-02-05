@@ -11,11 +11,12 @@ from threading import Thread
 # model_id = "Qwen/Qwen2.5-14B-Instruct"
 # model_id = "Qwen/Qwen2.5-7B-Instruct"
 # model_id = "Qwen/Qwen2.5-3B-Instruct"
-model_id = "Qwen/Qwen2.5-1.5B-Instruct"
+# model_id = "Qwen/Qwen2.5-1.5B-Instruct"
 # model_id = "Qwen/Qwen2.5-0.5B-Instruct"
 # model_id = "Qwen/Qwen2.5-Coder-14B-Instruct"
-# model_id = "Qwen/Qwen2.5-Coder-7B-Instruct"
+model_id = "Qwen/Qwen2.5-Coder-7B-Instruct"
 # model_id = "Qwen/Qwen2.5-Coder-3B-Instruct"
+# model_id = "unsloth/Qwen2.5-Coder-3B-Instruct-bnb-4bit"
 # model_id = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 
 device = torch.device("cpu")
@@ -24,17 +25,17 @@ bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,  # Enable nested quantization
     bnb_4bit_quant_type="nf4",       # Use Normal Float 4 data type
-    bnb_4bit_compute_dtype=torch.float,
+    bnb_4bit_compute_dtype=torch.bfloat16,
     # llm_int8_enable_fp32_cpu_offload=True
 )
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    torch_dtype=torch.bfloat16,
-    # torch_dtype="auto",
+    # torch_dtype=torch.bfloat16,
+    torch_dtype="auto",
     # torch_dtype=torch.int8,
-    # quantization_config=bnb_config,
+    quantization_config=bnb_config,
     # device_map="auto",
     device_map=0,
     # device_map="auto",
@@ -47,7 +48,7 @@ model = AutoModelForCausalLM.from_pretrained(
 streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True )
 
 # Tokens limit for model's response
-MAX_NEW_TOKENS = 2000
+MAX_NEW_TOKENS = 512
 
 # Generate a timestamped filename for saving the chat history
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -67,9 +68,20 @@ chat_history = [
     #     "role": "system",
     #     "content": "You are a knowledgeable, efficient, and direct AI assistant. You provide concise answers, focusing on the key information needed. You offer suggestions tactfully when appropriate to improve outcomes. You engage in productive collaboration with the user."
     # }
+    # {
+    #     "role": "system",
+    #     "content": "You are a knowledgeable, efficient, and direct AI assistant. You provide concise answers, focusing on the key information needed. You offer suggestions tactfully when appropriate to improve outcomes. You engage in productive collaboration with the other AI assistants."
+    # }
     {
         "role": "system",
-        "content": "You are a software developer."
+        "content": (
+                    "You are a software developer AI assistent. " 
+                    "Part of the code will be given, with a keyword [AUTOCOMPLETE_HERE] in the code. "
+                    "You will need to analyse the entire code and understand its purpose. "
+                    "Replace [AUTOCOMPLETE_HERE] with relevant code and return only the missing code. "
+                    "If you think there is nothing to add, return <NOTHING_TO_ADD>. "
+                    "You don't explain the code, don't summarize, you just return the missing code."
+                    )
     }
     # {
     #     "role": "user",
@@ -136,13 +148,24 @@ def save_chat_history():
         json.dump(copied_chat_history, file, indent=4)
 
 # Function to get a response
-def chat_with_bot(user_input):
-    # Append the user message to the chat history and copied chat history
-    chat_history.append({"role": "user", "content": user_input})
-    copied_chat_history.append({"role": "user", "content": user_input})
+def chat_with_bot(user_input, continue_chat=True):
+
+    global copied_chat_history
+
+    temp_chat_history = []
+
+    if continue_chat:
+        # Append the user message to the chat history and copied chat history
+        chat_history.append({"role": "user", "content": user_input})
+        copied_chat_history.append({"role": "user", "content": user_input})
+    else:
+        temp_chat_history = copy.deepcopy(chat_history)
+        temp_chat_history.append({"role": "user", "content": user_input})
+
+    print(temp_chat_history)
 
     inputs = tokenizer.apply_chat_template(
-      chat_history,
+      chat_history if continue_chat else temp_chat_history,
       tokenize=True,
       add_generation_prompt=True,
       return_tensors="pt",
@@ -176,20 +199,35 @@ def chat_with_bot(user_input):
     # print(f"\nAssistant ({t2 - t1:.2f}s): {bot_response}")
     print(f"\nResponse in {t2 - t1}s\n")
     
-    # Add the bot's response to the chat history and copied chat history
-    chat_history.append({"role": "assistant", "content": bot_response})
-    copied_chat_history.append({"role": "assistant", "content": bot_response, "time": t2 - t1})
+    if continue_chat:
+        # Add the bot's response to the chat history and copied chat history
+        chat_history.append({"role": "assistant", "content": bot_response})
+        copied_chat_history.append({"role": "assistant", "content": bot_response, "time": t2 - t1})
+    else:
+        copied_chat_history = copy.deepcopy(temp_chat_history)
+        temp_chat_history.append({"role": "assistant", "content": bot_response})
+        copied_chat_history.append({"role": "assistant", "content": bot_response, "time": t2 - t1})
     
     # Save the updated chat history
     save_chat_history()
+
+    # save the last bost respone in a text file
+    with open("bot_response.txt", 'w', encoding='utf-8') as file:
+        file.write(f"AI assistant: {bot_response}")
     
     return bot_response
 
 # Example usage
 while True:
-    user_input = input("You: ")
-    if user_input.lower() in ["exit", "quit"]:
-        print("Goodbye, friend!")
-        break
+    user_input = input("You: ").strip()
+    if user_input:
+        if user_input.lower() in ["exit", "quit"]:
+            print("Goodbye, friend!")
+            break
 
-    bot_response = chat_with_bot(user_input)
+        if os.path.exists(user_input):
+            with open(user_input, 'r', encoding='utf-8') as file:
+                user_input = file.read()
+
+
+        bot_response = chat_with_bot(user_input, continue_chat=False)
